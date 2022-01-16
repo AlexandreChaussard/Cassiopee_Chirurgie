@@ -1,6 +1,6 @@
 import math
 import scipy.stats
-from fonctions_TP_python import *
+from fonctions_TP_python import * 
 
 # Nombre de particules
 N = 50
