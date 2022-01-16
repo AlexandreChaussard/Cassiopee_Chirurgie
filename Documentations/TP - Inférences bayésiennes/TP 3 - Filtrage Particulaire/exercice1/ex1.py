@@ -49,7 +49,7 @@ def erreur_quadratic(X, E):
     for i in range(0, len(X)):
         sum = sum + (X[i] - E[i]) ** 2
 
-    return sum
+    return sum/T
 
 # Plot les graphes
 def tracer(X, Y, Z=None):
@@ -109,7 +109,7 @@ def filtrage_particulaire(Y, N):
     for t in range(1, T):
 
         X_t_moins_1 = np.random.choice(list(X_est[:, -1]), N, list(w[:, -1])).reshape(-1, 1)  # tire N particules selon la pondération w
-        X_t = 0.5 * X_t_moins_1 + 25 * X_t_moins_1 / (1 + X_t_moins_1 ** 2) + 8 * np.cos(1.2 * t) + np.random.randn(N,
+        X_t = 0.5 * X_t_moins_1 + 25 * X_t_moins_1 / (1 + X_t_moins_1 ** 2) + 8 * np.cos(1.2 * t) + Q**.5 *np.random.randn(N,
                                                                                                                     1)  # application du modèle
         w_t = g(Y[t], X_t)
         w_t = w_t / np.sum(w_t)
@@ -131,3 +131,66 @@ E = esperance(X_est, W)
 print("--- %s seconds ---" % (time.time() - end_time))
 
 tracer(X, Y, E)
+
+# EQM en fonction de N
+
+T = 50
+abscisse = []
+error_results = []
+for i in range(1, 100):
+    N = i
+    abscisse.append(i)
+    error = 0
+
+    for j in range(0, 100):
+        X = generer_trajectoire(T, Q)
+        Y = generer_observations(X, R)
+        X_est, W = filtrage_particulaire(Y, N)
+        E = esperance(X_est, W)
+        error += erreur_quadratic(X, E)
+    error = error/100
+    error_results.append(error)
+
+plt.title("EQM en fonction de N")
+plt.plot(abscisse, error_results)
+plt.show()
+
+# Temps d'exec en fonction de N
+
+abscisse = []
+results = []
+X = generer_trajectoire(T, Q)
+Y = generer_observations(X, R)
+for i in range(1, 1000):
+    N = i
+    abscisse.append(i)
+    start_time = time.time()
+    X_est, W = filtrage_particulaire(Y, N)
+    E = esperance(X_est, W)
+
+    spent = time.time() - start_time
+    results.append(spent)
+
+plt.title("Temps d'exécution en fonction de N")
+plt.plot(abscisse, results)
+plt.show()
+
+# EQM en fonction de T
+
+abscisse = []
+error_results = []
+for i in range(1, 300):
+    T = i
+    abscisse.append(i)
+    X = generer_trajectoire(T, Q)
+    Y = generer_observations(X, R)
+
+    X_est, W = filtrage_particulaire(Y, N)
+    E = esperance(X_est, W)
+
+    error = erreur_quadratic(X, E)
+    error_results.append(error)
+
+plt.title("EQM en fonction de T")
+plt.plot(abscisse, error_results)
+plt.show()
