@@ -1,0 +1,38 @@
+Liens intéressants :
+
+
+Bases de données :
+
+CMU Panopic dataset : http://domedb.perception.cs.cmu.edu/handdb.html
+Apparemment y'a des images du CHU de grenoble en libre accès (à chercher)
+
+Papiers :
+
+    IEEE :
+        - XXX 'Temporally Guided Articulated Hand Pose Tracking in Surgical Videos' https://arxiv.org/pdf/2101.04281v2.pdf
+        - 'Graph-based Surgical Instrument Adaptive Segmentation via Domain-Common Knowledge' https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9583929
+
+
+    Paper with code :
+        - Mediapipe : https://arxiv.org/abs/2006.10214 'On device real time hand tracking'
+
+
+    Challenges de machine learning sur dans le domaine de la chrirurgie
+    https://grand-challenge.org
+
+    Segmentation des outils :
+    https://arxiv.org/pdf/1911.10194.pdf
+
+
+
+Label Studio :
+
+    Documentation (comment annoter des données) :
+        - https://labelstud.io/guide/labeling.html
+
+
+
+
+
+
+

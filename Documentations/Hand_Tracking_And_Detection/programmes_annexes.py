@@ -30,4 +30,13 @@ def get_label(mp_hands, hand, index, results, lenght, width, with_world):
     return output
 
 
+def get_wrist_pos(hand, results):
+    output = None
+    for idx, test in enumerate(hand):
+        pass
+
+    return output
+
+
+
 
