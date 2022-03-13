@@ -24,8 +24,6 @@ Pince;225;Aucune option
 
 Pince;242;Aucune option
 
-Préférence manuelle;161;Droitier
-
 Points/Aiguille;20;Coup droit
 
 Points/Aiguille;47;Revers
@@ -34,11 +32,11 @@ Points/Aiguille;78;Revers
 
 Points/Aiguille;103;Revers
 
+Points/Aiguille;140;Revers
+
 Points/Aiguille;182;Revers
 
-Points/Aiguille;241;Revers
-
-Points/Aiguille;276;Mixte
+Points/Aiguille;241;Mixte
 
 Fil;18;Main de la pince
 
@@ -54,4 +52,5 @@ Fil;142;Main de la pince
 
 Fil;190;Main de la pince
 
-Points/Aiguille;140.0;Coup droit
+Préférence manuelle;301.0;Droitier
+Points/Aiguille;69.0;Coup droit

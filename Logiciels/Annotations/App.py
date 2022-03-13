@@ -26,6 +26,7 @@ class App:
         self.window = window
         self.window.attributes('-fullscreen', True)
         self.window.bind("<space>", self.pause)
+        self.window.bind("<Escape>", self.quit)
         self.window.bind("<Return>", self.addAnnotation)
         self.window.title(window_title)
 
@@ -40,7 +41,7 @@ class App:
         self.file.close()
 
         # Create a canvas that can fit the above video source size
-        self.canvas = tkinter.Canvas(self.window, width=self.vid.width, height=self.vid.height)
+        self.canvas = tkinter.Canvas(self.window, width=self.vid.width*0.85, height=self.vid.height)
         self.canvas.pack(padx=2, pady=2, side=tkinter.RIGHT)
 
         # File
@@ -67,7 +68,8 @@ class App:
         # Title
         self.annotation_button_text = tkinter.StringVar()
         self.annotation_button_text.set("Sélectionner une annotation\n dans le menu \"Annotations\"")
-        self.annotation_canvas_text = tkinter.Label(self.window, textvariable=self.annotation_button_text)
+        self.annotation_canvas_text = tkinter.Label(self.window, textvariable=self.annotation_button_text, pady=5)
+        self.annotation_canvas_text.config(font=('Helvatical bold',13))
         self.annotation_canvas_text.pack()
         # Vitesse de lecture
         self.speed = tkinter.DoubleVar()
@@ -136,7 +138,7 @@ class App:
         self.cid = self.figureTimeLine.canvas.mpl_connect('button_press_event', self.onClick)
         self.axesPlot = self.figureTimeLine.add_subplot()
         self.axesPlot.plot(timeX, timeY)
-        self.axesPlot.plot(timeLineX, timeLineY, 'ro')
+        self.axesPlot.plot(timeLineX, timeLineY, 'ro', markeredgewidth=1.5, markeredgecolor=(0, 0, 0, 1))
         canvas = FigureCanvasTkAgg(self.figureTimeLine, self.window)
         self.axesPlot.axis('off')
         canvas.get_tk_widget().pack(side=tkinter.LEFT)
@@ -156,8 +158,8 @@ class App:
         timeLineY = [0]
         self.axesPlot = self.figureTimeLine.add_subplot()
         self.axesPlot.plot(timeX, timeY)
-        self.axesPlot.plot(timeLineX, timeLineY, 'ro')
         self.axesPlot.plot([0] + timeLineX, [0] + timeLineY, 'r')
+        self.axesPlot.plot(timeLineX, timeLineY, 'ro', markeredgewidth=0.5, markeredgecolor=(0, 0, 0, 1))
         self.updateVisualData()
         self.axesPlot.axis('off')
         self.figureTimeLine.canvas.draw()
@@ -179,7 +181,7 @@ class App:
                         self.axesPlot.plot(abscisse, paire, visual, color=self.data.colors[i])
                         paire = []
                         abscisse = []
-            self.axesPlot.plot(X, Y, "D", color=self.data.colors[i], label=modeName)
+            self.axesPlot.plot(X, Y, "D", color=self.data.colors[i], label=modeName, markeredgewidth=0.5, markeredgecolor=(0, 0, 0, 1))
             i += 1
 
         self.axesPlot.plot([0], [len(self.modeList) + 4], ".", color=[1, 1, 1])
@@ -269,6 +271,9 @@ class App:
 
     def stop(self):
         self.window.destroy()
+
+    def quit(self, event=None):
+        exit(0)
 
     def rebuild(self, title, video_path):
         if video_path == '':

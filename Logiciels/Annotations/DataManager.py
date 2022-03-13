@@ -10,7 +10,7 @@ class Data:
         self.moreData = [[]] * len(self.app.modeList)
         self.colors = []
         for i in range(0, len(self.app.modeList)):
-            self.colors.append(cm.get_cmap("jet")((i+0.99)/len(self.app.modeList)))
+            self.colors.append(cm.get_cmap("viridis")((i+0.99)/len(self.app.modeList)))
         self.initialize_matrix()
 
     def initialize_matrix(self):
@@ -55,7 +55,7 @@ class Data:
 
         i = 0
         valueIndex = None
-        distance = None
+        distance = 0
         for value in data:
             if valueIndex is None:
                 distance = (value - time)**2
