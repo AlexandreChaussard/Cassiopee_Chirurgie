@@ -1,14 +1,11 @@
-import cv2
-import numpy as np
+from App import *
 
+fileName = chooseFile()
+tkinter.NoDefaultRoot()
 
-# Renvoie une image cv2 de la vidéo spécifié
-def getCameraView(self, cameraSlot=2):
-    """ Récupère l'image courante de la vidéo
-    :param cameraSlot: slot de la caméra sur l'ordinateur (default = 0)
-    :return: frame - image de la caméra
-    """
-    if self.cap is None:
-        self.cap = cv2.VideoCapture(cameraSlot, cv2.CAP_DSHOW)
-    _, frame = self.cap.read()
-    return frame
+if fileName == '':
+    exit(0)
+
+root = Tk()
+tkinter._default_root = root
+App(root, "Annotation video", video_path=fileName)

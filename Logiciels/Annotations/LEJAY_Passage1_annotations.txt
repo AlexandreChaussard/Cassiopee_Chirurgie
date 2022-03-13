@@ -1,0 +1,8 @@
+Points/Aiguille;150.0;
+Porte-aiguille;267.0;
+Porte-aiguille;56.0;
+Porte-aiguille;187.0;
+Fil;301.0;
+Fil;37.0;
+Fil;75.0;
+Fil;109.0;

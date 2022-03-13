@@ -14,6 +14,7 @@ class VideoObject:
         self.width = self.video.get(cv2.CAP_PROP_FRAME_WIDTH)
         self.height = self.video.get(cv2.CAP_PROP_FRAME_HEIGHT)
         self.frame_count = self.video.get(cv2.CAP_PROP_FRAME_COUNT)
+        self.currentFrame = self.video.get(cv2.CAP_PROP_POS_FRAMES)
 
     # Release the video source when the object is destroyed
     def __del__(self):
@@ -32,15 +33,18 @@ class VideoObject:
 
             if ret:
                 # Return a boolean success flag and the current frame converted to BGR
-                return (ret, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+                return ret, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             else:
-                return (ret, None)
+                return ret, None
         else:
-            return (ret, None)
+            return ret, None
 
     # Renvoie une image cv2 de la vidéo spécifié
     def getCurrentView(self):
         if self.currentView is not None:
-            return (self.currentView[0], cv2.cvtColor(self.currentView[1], cv2.COLOR_BGR2RGB))
+            return self.currentView[0], cv2.cvtColor(self.currentView[1], cv2.COLOR_BGR2RGB)
         else:
             return None
+
+    def getCurrentFrameIndex(self):
+        return self.video.get(cv2.CAP_PROP_POS_FRAMES)
