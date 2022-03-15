@@ -50,11 +50,14 @@ class App:
         # self.file_selector.pack(label="Fichier")
 
         # Mode menu
-        self.modeList = [["Porte-aiguille", self.annot_porteAiguille, "-", ["Aucune option"]],
-                         ["Pince", self.annot_pince, "-", ["Aucune option"]],
+        self.modeList = [["Porte-aiguille", self.annot_porteAiguille, "-", ["Avec aiguille (out)", "Sans aiguille (out)", "In"]],
+                         ["Pince", self.annot_pince, "-", ["Out"]],
                          ["Préférence manuelle", self.annot_manuelle, "D", ["Droitier", "Gaucher"]],
-                         ["Points/Aiguille", self.annot_points, "D", ["Coup droit", "Revers", "Mixte"]],
-                         ["Fil", self.annot_fil, "D", ["Main de la pince", "Main du porte-aiguille", "Les deux mains"]]]
+                         ["Aiguille", self.annot_aiguille, "D", ["Coup droit", "Revers", "Mixte"]],
+                         ["Points", self.annot_points, "D", ["Début"]],
+                         ["Fil", self.annot_fil, "D", ["Main de la pince", "Main du porte-aiguille", "Les deux mains"]],
+                         ["Main dans la boîte", self.annot_mainboite, "D", ["Aucune option"]],
+                         ["Noeud chirurgical", self.annot_noeud, "D", ["Serré", "Non serré", "Echec"]]]
         self.modeList = np.array(self.modeList)
         self.modeVisual = self.modeList[:, 2]
         self.mode = None
@@ -134,7 +137,7 @@ class App:
         timeY = [0, 0]
         timeLineX = [self.vid.getCurrentFrameIndex()]
         timeLineY = [0]
-        self.figureTimeLine = plt.Figure(figsize=(6, 3), dpi=100)
+        self.figureTimeLine = plt.Figure(figsize=(6, 5), dpi=100)
         self.cid = self.figureTimeLine.canvas.mpl_connect('button_press_event', self.onClick)
         self.axesPlot = self.figureTimeLine.add_subplot()
         self.axesPlot.plot(timeX, timeY)
@@ -181,10 +184,10 @@ class App:
                         self.axesPlot.plot(abscisse, paire, visual, color=self.data.colors[i])
                         paire = []
                         abscisse = []
-            self.axesPlot.plot(X, Y, "D", color=self.data.colors[i], label=modeName, markeredgewidth=0.5, markeredgecolor=(0, 0, 0, 1))
+            self.axesPlot.plot(X, Y, "D", color=self.data.colors[i], label=modeName, markersize=6, markeredgewidth=0.5, markeredgecolor=(0, 0, 0, 1))
             i += 1
 
-        self.axesPlot.plot([0], [len(self.modeList) + 4], ".", color=[1, 1, 1])
+        self.axesPlot.plot([0], [len(self.modeList) + 5], ".", color=[1, 1, 1])
         self.axesPlot.legend(loc='upper left', fontsize='x-small')
 
     def onClick(self, event):
@@ -234,7 +237,12 @@ class App:
         self.updateTitle()
 
     def annot_points(self):
-        self.mode = "Points/Aiguille"
+        self.mode = "Points"
+        self.updateOptions()
+        self.updateTitle()
+
+    def annot_aiguille(self):
+        self.mode = "Aiguille"
         self.updateOptions()
         self.updateTitle()
 
@@ -245,6 +253,16 @@ class App:
 
     def annot_pince(self):
         self.mode = "Pince"
+        self.updateOptions()
+        self.updateTitle()
+
+    def annot_noeud(self):
+        self.mode = "Noeud chirurgical"
+        self.updateOptions()
+        self.updateTitle()
+
+    def annot_mainboite(self):
+        self.mode = "Main dans la boîte"
         self.updateOptions()
         self.updateTitle()
 

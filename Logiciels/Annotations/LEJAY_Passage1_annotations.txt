@@ -1,56 +1,36 @@
-Porte-aiguille;159;Aucune option
+Porte-aiguille;20;Avec aiguille (out)
 
-Porte-aiguille;180;Aucune option
+Porte-aiguille;41;Avec aiguille (out)
 
-Porte-aiguille;208;Aucune option
+Porte-aiguille;68;Avec aiguille (out)
 
-Porte-aiguille;227;Aucune option
+Porte-aiguille;90;Avec aiguille (out)
 
-Porte-aiguille;255;Aucune option
+Porte-aiguille;116;Avec aiguille (out)
 
-Pince;15;Aucune option
+Porte-aiguille;143;Avec aiguille (out)
 
-Pince;30;Aucune option
+Porte-aiguille;174;Avec aiguille (out)
 
-Pince;61;Aucune option
+Porte-aiguille;200;Avec aiguille (out)
 
-Pince;81;Aucune option
+Porte-aiguille;230;Avec aiguille (out)
 
-Pince;120;Aucune option
+Pince;230;Out
 
-Pince;178;Aucune option
+Préférence manuelle;10;Droitier
 
-Pince;225;Aucune option
+Préférence manuelle;31;Droitier
 
-Pince;242;Aucune option
+Préférence manuelle;57;Droitier
 
-Points/Aiguille;20;Coup droit
+Points;205;Début
 
-Points/Aiguille;47;Revers
+Points;236;Début
 
-Points/Aiguille;78;Revers
+Main dans la boîte;230;Aucune option
 
-Points/Aiguille;103;Revers
+Main dans la boîte;251;Aucune option
 
-Points/Aiguille;140;Revers
+Noeud chirurgical;72;Serré
 
-Points/Aiguille;182;Revers
-
-Points/Aiguille;241;Mixte
-
-Fil;18;Main de la pince
-
-Fil;20;Main de la pince
-
-Fil;50;Main de la pince
-
-Fil;67;Main de la pince
-
-Fil;107;Main de la pince
-
-Fil;142;Main de la pince
-
-Fil;190;Main de la pince
-
-Préférence manuelle;301.0;Droitier
-Points/Aiguille;69.0;Coup droit
