@@ -14,7 +14,7 @@ mpPose = mp.solutions.pose
 pose = mpPose.Pose(model_complexity=1, min_detection_confidence=0.7, min_tracking_confidence=0.6)
 
 name = 'LEJAY/LEJAY_p2_short.mp4'
-cap = cv2.VideoCapture(name)
+cap = cv2.VideoCapture(0)
 
 # ----- Modifier la taille de l'affichage vidéo : ------
 
@@ -57,18 +57,6 @@ while cap.isOpened():
     if hand_results.multi_hand_landmarks:
         drawing_hands(hand_results, annotated_img)
 
-    #if pose_results.pose_lanmarks:
-    #
-#
-    #if pose_results.pose_landmarks:
-    #    mp_drawing.draw_landmarks(image, pose_results.pose_landmarks, mpPose.POSE_CONNECTIONS)
-    #    for id, lm in enumerate(pose_results.pose_landmarks.landmark):
-    #        h, w, c = image.shape
-#
-    #        cx, cy = int(lm.x * w), int(lm.y * h)
-    #        cv2.circle(image, (cx, cy), 5, (255, 0, 0), cv2.FILLED)
-
-
     # Flip the image horizontally for a selfie-view display.
     out.write(cv2.flip(annotated_img, 1))
     cv2.imshow('MediaPipe Hands', cv2.flip(annotated_img, 1))
@@ -77,6 +65,7 @@ while cap.isOpened():
       break
 
 cap.release()
+
 # Pour l'enregistrement vidéo
 out.release()
 cv2.destroyAllWindows()

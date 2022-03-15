@@ -1,7 +1,7 @@
 import mediapipe as mp
 import cv2
 
-from programmes_annexes import get_label
+from programmes_annexes import right_or_left
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
@@ -21,8 +21,8 @@ def drawing_hands(hand_results, image):
             mp_drawing_styles.get_default_hand_landmarks_style(),
             mp_drawing_styles.get_default_hand_connections_style())
 
-        if get_label(mp_hands, hand_landmarks, num, hand_results, HEIGHT, WIDTH, False):
-            text, coords = get_label(mp_hands, hand_landmarks, num, hand_results, HEIGHT, WIDTH, False)
+        if right_or_left(mp_hands, hand_landmarks, num, hand_results, HEIGHT, WIDTH, False):
+            text, coords = right_or_left(mp_hands, hand_landmarks, num, hand_results, HEIGHT, WIDTH, False)
             cv2.putText(image, text, coords, cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), thickness=2, lineType=cv2.LINE_AA)
 
     return image

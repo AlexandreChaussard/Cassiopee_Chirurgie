@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def get_label(mp_hands, hand, index, results, lenght, width, with_world):
+def right_or_left(mp_hands, hand, index, results, lenght, width, with_world):
     output = None
     for idx, classification in enumerate(results.multi_handedness):
 
@@ -29,13 +29,6 @@ def get_label(mp_hands, hand, index, results, lenght, width, with_world):
 
     return output
 
-
-def get_wrist_pos(hand, results):
-    output = None
-    for idx, test in enumerate(hand):
-        pass
-
-    return output
 
 
 
