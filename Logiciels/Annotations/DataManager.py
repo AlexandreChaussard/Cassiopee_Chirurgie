@@ -96,8 +96,9 @@ class Data:
     def getAxis(self, modeName):
         index = self.app.indexOfAnnotation(modeName)
         data = self.annotationList[index]
+        moreData = self.moreData[index]
         Y = []
         for i in range(0, len(data)):
             Y.append(index+1)
 
-        return data, Y
+        return data, moreData, Y
