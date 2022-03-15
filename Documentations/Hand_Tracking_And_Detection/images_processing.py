@@ -2,8 +2,18 @@ import cv2
 
 video_name = 'LEJAY/LEJAY_p2_short.mp4'
 
+"""
+Ce programme comporte des fonctions permettant de :
+- Afficher une vidéo enregistrée sur l'ordi
+- Convertir une video au format .avi en vidéo au format .mp4 et de changer les fps si besoin
+- Prendre des photos à partir de la vidéo obtenue par la caméra
 
-def video_to_images(video_name, save_bool):
+À terme :
+- Transformer une vidéo en d'images (presque tout fait à image, suc = cap.read() d'openCV)
+"""
+
+
+def avi_to_mp4(video_name, save_bool):
     cap = cv2.VideoCapture(video_name)
 
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -80,9 +90,9 @@ def images_from_camera():
 
 
 def display_video(video_name):
-    video_to_images(video_name, False)
+    avi_to_mp4(video_name, False)
 
 
 #display_video(video_name)
-# images_from_camera()
-video_to_images(video_name, True) # video_name = 0 permet d'accéder à la caméra
+#images_from_camera()
+#avi_to_mp4(video_name, True)  # video_name = 0 permet d'accéder à la caméra

@@ -24,12 +24,38 @@ Papiers :
     https://arxiv.org/pdf/1911.10194.pdf
 
 
+Modélisation 3D :
+
+    Open3D : (doc officielle) - http://www.open3d.org/docs/release/tutorial/sensor/realsense.html
+
+             RealSense & Open3D :
+                        - http://www.open3d.org/docs/release/tutorial/sensor/realsense.html#reading-from-realsense-bag-files
+
+             Meshage :  - http://www.open3d.org/docs/release/tutorial/geometry/mesh.html
+                        - http://www.open3d.org/docs/latest/tutorial/Advanced/surface_reconstruction.html
+
+             Tutoriel Youtube :
+                        - https://www.youtube.com/watch?v=vGr8Bg2Fda8
+
+
+
+
 
 Label Studio :
 
     Documentation (comment annoter des données) :
         - https://labelstud.io/guide/labeling.html
 
+
+
+Comparaison Kinect - RealSense :
+
+ Youtube :
+    - D435 vs Kinect (pour du nuage de points en 3D + carte de couleur) https://www.youtube.com/watch?v=O0hSzay3fns
+
+
+ Wiki :
+    - Comparaison Caméras Intel et caméras Microsoft : https://docs.ipisoft.com/Depth_Sensors_Comparison
 
 
 
