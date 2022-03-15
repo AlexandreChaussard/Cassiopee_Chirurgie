@@ -1,34 +1,52 @@
+Porte-aiguille;17;In
+
+Porte-aiguille;40;In
+
+Porte-aiguille;77;In
+
+Porte-aiguille;112;In
+
+Porte-aiguille;145;In
+
+Porte-aiguille;167;In
+
+Porte-aiguille;37;Avec aiguille (out)
+
+Porte-aiguille;48;Avec aiguille (out)
+
+Porte-aiguille;74;Avec aiguille (out)
+
+Porte-aiguille;93;Avec aiguille (out)
+
+Porte-aiguille;118;Avec aiguille (out)
+
+Porte-aiguille;149;Avec aiguille (out)
+
+Porte-aiguille;180;Avec aiguille (out)
+
+Porte-aiguille;211;Avec aiguille (out)
+
+Porte-aiguille;240;Avec aiguille (out)
+
+Porte-aiguille;74;Avec aiguille (out)
+
+Préférence manuelle;73;Gaucher
+
+Aiguille;73;Coup droit
+
+Aiguille;93;Coup droit
+
+Aiguille;130;Coup droit
+
+Points;64;Début
+
+Points;146;Début
+
+Fil;90;Main de la pince
+
+Fil;136;Main de la pince
+
+Fil;44;Les deux mains
+
 Noeud chirurgical;72;Serré
 
-Noeud chirurgical;245;Serré
-
-Noeud chirurgical;273;Serré
-
-Noeud chirurgical;301.0;Serré
-Porte-aiguille;17.0;In
-Porte-aiguille;40.0;In
-Porte-aiguille;77.0;In
-Porte-aiguille;112.0;In
-Porte-aiguille;145.0;In
-Porte-aiguille;167.0;In
-Porte-aiguille;37.0;Avec aiguille (out)
-Porte-aiguille;48.0;Avec aiguille (out)
-Porte-aiguille;74.0;Avec aiguille (out)
-Porte-aiguille;93.0;Avec aiguille (out)
-Porte-aiguille;118.0;Avec aiguille (out)
-Porte-aiguille;149.0;Avec aiguille (out)
-Porte-aiguille;180.0;Avec aiguille (out)
-Porte-aiguille;211.0;Avec aiguille (out)
-Porte-aiguille;240.0;Avec aiguille (out)
-Porte-aiguille;74.0;Avec aiguille (out)
-Aiguille;73.0;Coup droit
-Aiguille;93.0;Coup droit
-Aiguille;130.0;Coup droit
-Points;64.0;Début
-Points;146.0;Début
-Préférence manuelle;73.0;Gaucher
-Fil;90.0;Main de la pince
-Fil;136.0;Main de la pince
-Noeud chirurgical;263.0;Serré
-Noeud chirurgical;280.0;Serré
-Fil;44.0;Les deux mains

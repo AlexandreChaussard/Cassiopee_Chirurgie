@@ -45,18 +45,25 @@ class Data:
         if index >= len(self.annotationList[i]):
             return None
         del self.annotationList[i][index]
+        del self.moreData[i][index]
         self.app.updateTimeLine(force=True)
 
     def removeDataAround(self, time, index):
         if index-1 < 0 or index-1 >= len(self.annotationList):
             return
-        data = self.annotationList[index - 1]
-        data.sort()
+        sortedData = np.array(sorted(self.moreData[index - 1], key=lambda x: float(x[0])))
+        data = sortedData[:, 0]
+        attributes = sortedData[:, 1]
+        activeAttribute = self.app.dataOption.get() + ""
 
         i = 0
         valueIndex = None
         distance = 0
-        for value in data:
+        for k in range(0, len(data)):
+            value = float(data[k])
+            attribute = attributes[k]
+            if activeAttribute not in attribute:
+                continue
             if valueIndex is None:
                 distance = (value - time)**2
                 valueIndex = i
@@ -66,8 +73,9 @@ class Data:
             else:
                 break
             i += 1
-        if distance < 5.5:
+        if distance < 5.5 and valueIndex is not None:
             del self.annotationList[index-1][valueIndex]
+            del self.moreData[index-1][valueIndex]
             self.save()
             self.app.updateTimeLine(force=True)
 
