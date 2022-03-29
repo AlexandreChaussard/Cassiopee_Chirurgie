@@ -46,7 +46,12 @@ class Data:
             return None
         del self.annotationList[i][index]
         del self.moreData[i][index]
+        self.save()
         self.app.updateTimeLine(force=True)
+
+    def removeLastData(self, modeName):
+        i = self.app.indexOfAnnotation(modeName)
+        self.removeData(len(self.annotationList[i])-1, modeName)
 
     def removeDataAround(self, time, index):
         if index-1 < 0 or index-1 >= len(self.annotationList):

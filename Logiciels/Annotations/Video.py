@@ -1,5 +1,5 @@
 import cv2
-
+import copy
 
 class VideoObject:
 
@@ -38,6 +38,14 @@ class VideoObject:
                 return ret, None
         else:
             return ret, None
+
+        # Renvoie une image cv2 de la vidéo spécifié
+    def getPreviousView(self):
+        self.video.set(cv2.CAP_PROP_POS_FRAMES, self.video.get(cv2.CAP_PROP_POS_FRAMES) - 2)
+        ret, frame = self.video.read()
+        self.currentView = [ret, frame]
+
+        return ret, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
     # Renvoie une image cv2 de la vidéo spécifié
     def getCurrentView(self):

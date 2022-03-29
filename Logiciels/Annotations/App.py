@@ -28,6 +28,9 @@ class App:
         self.window.bind("<space>", self.pause)
         self.window.bind("<Escape>", self.quit)
         self.window.bind("<Return>", self.addAnnotation)
+        self.window.bind("<Delete>", self.removeLast)
+        self.window.bind("<Left>", self.backward)
+        self.window.bind("<Right>", self.forward)
         self.window.title(window_title)
 
         # open video source
@@ -51,7 +54,7 @@ class App:
 
         # Mode menu
         self.modeList = [
-            ["Porte-aiguille", self.annot_porteAiguille, "-", ["Avec aiguille (out)", "Sans aiguille (out)", "In"]],
+            ["Porte-aiguille", self.annot_porteAiguille, "D", ["Avec aiguille (out)", "Sans aiguille (out)", "In"]],
             ["Pince", self.annot_pince, "-", ["Out"]],
             ["Préférence manuelle", self.annot_manuelle, "D", ["Droitier", "Gaucher"]],
             ["Aiguille", self.annot_aiguille, "D", ["Coup droit", "Revers", "Mixte"]],
@@ -310,6 +313,12 @@ class App:
         if ret:
             cv2.imwrite("frame-" + time.strftime("%d-%m-%Y-%H-%M-%S") + ".jpg", cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
 
+    def removeLast(self, event=None):
+        if self.mode is None:
+            return
+        print("removing " + self.mode)
+        self.data.removeLastData(self.mode)
+
     def pause(self, event=None):
         if self.vid.getCurrentFrameIndex() == self.vid.frame_count:
             return
@@ -328,6 +337,24 @@ class App:
 
     def stop(self):
         self.window.destroy()
+
+    def forward(self, event=None):
+        self.isPaused = True
+        if self.vid.getCurrentFrameIndex() == self.vid.frame_count:
+            return
+        ret, frame = self.vid.getNextView()
+        if ret:
+            self.photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(frame))
+            self.canvas.create_image(0, 0, image=self.photo, anchor=tkinter.NW)
+
+    def backward(self, event=None):
+        self.isPaused = True
+        if self.vid.getCurrentFrameIndex() == 0:
+            return
+        ret, frame = self.vid.getPreviousView()
+        if ret:
+            self.photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(frame))
+            self.canvas.create_image(0, 0, image=self.photo, anchor=tkinter.NW)
 
     def quit(self, event=None):
         exit(0)
