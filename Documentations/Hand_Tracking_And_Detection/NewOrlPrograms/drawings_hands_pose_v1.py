@@ -9,7 +9,7 @@ import mediapipe as mp
 def hands_pose_annotation(vid_name, do_hands_drawing=False, do_pose_drawing=False):
 
     # --------------------------------------------- #
-    #           Initilisation de Médiapipe          #
+    #           Initialisation de Médiapipe          #
     # --------------------------------------------- #
 
     mp_drawing = mp.solutions.drawing_utils
@@ -53,7 +53,7 @@ def hands_pose_annotation(vid_name, do_hands_drawing=False, do_pose_drawing=Fals
     # Pour l'enregistrement :
     fourcc = cv2.VideoWriter_fourcc('X', 'V', 'I', 'D')
     save_name = os.path.splitext(name)[0] + "_annotated.avi"
-    out = cv2.VideoWriter(save_name, fourcc, 20.0, (WIDTH, HEIGHT))
+    out = cv2.VideoWriter(save_name, fourcc, 15.0, (WIDTH, HEIGHT))
 
     pTime = 0
 
@@ -114,8 +114,12 @@ def hands_pose_annotation(vid_name, do_hands_drawing=False, do_pose_drawing=Fals
         # On enregistre le résultat
         out.write(annotated_img)
 
+    # --------------------------------------------- #
+    #               Zone de fermeture               #
+    # --------------------------------------------- #
+
     cap.release()
-    # Pour l'enregistrement vidéo
+    # Pour clore l'enregistrement vidéo
     out.release()
 
     # Fermeture d'OpenCv
