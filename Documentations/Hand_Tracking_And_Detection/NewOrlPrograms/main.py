@@ -12,14 +12,14 @@ parser = argparse.ArgumentParser(description="Lit la vidéo donnée en argument 
                                              "annotations des mains et la posture détectée sur la vidéo. "
                                              "La vidéo doit être au formant .avi. \n "
                                              "Pour utiliser le programme sur une unique vidéo, tapez : | \n "
-                                             "python main.py -i vid1.avi \n "
+                                             "python MainHandTracker.py -i vid1.avi \n "
                                              "| Sachez que le programme accepte plusieurs vidéos en argument "
-                                             "| python main.py -i vid1.avi vid2.avi vid3.avi | par exemple")
+                                             "| python MainHandTracker.py -i vid1.avi vid2.avi vid3.avi | par exemple")
 
 # On ajoute l'option (-i ou --input) qui permet de donner une vidéo (.avi) en argument
 parser.add_argument("-i", "--input", nargs='+', type=str, help="Chemin vers la video. Si la vidéo est dans le même "
                                                                "répertoire que le programme, écrivez simplement : "
-                                                               "python main.py -i 'nom_video'.avi")
+                                                               "python MainHandTracker.py -i 'nom_video'.avi")
 args = parser.parse_args()
 
 
