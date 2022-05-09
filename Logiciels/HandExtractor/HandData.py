@@ -6,6 +6,7 @@ class HandData:
 
     def __init__(self, path):
         self.path = path
+        self.hand = "Right"
         self.data = []
         self.points = []
         self.trajectories = []
@@ -18,7 +19,7 @@ class HandData:
         line = file.readline()
         while line:
             try:
-                [frameCount, data] = line.split(":")
+                [frameCountAndHandLabel, data] = line.split(":")
             except ValueError:
                 line = file.readline()
                 continue
@@ -27,15 +28,23 @@ class HandData:
             except ValueError:
                 line = file.readline()
                 continue
+            try:
+                [frameCount, handLabel] = frameCountAndHandLabel.split(";")
+            except ValueError:
+                line = file.readline()
+                continue
             for val in values:
                 [point, x, y, z] = val.split(";")
                 if point not in self.points:
                     self.points.append(point)
-                self.data.append([frameCount, point, x, y, z])
+                self.data.append([handLabel, frameCount, point, x, y, z])
             line = file.readline()
 
         self.trajectories = np.array([None] * len(self.points))
         file.close()
+
+    def setHand(self, handLabel):
+        self.hand = handLabel
 
     def getTrajectory(self, point):
 
@@ -44,7 +53,9 @@ class HandData:
 
         trajectory = []
         T = []
-        for [fCount, p, x, y, z] in self.data:
+        for [handLabel, fCount, p, x, y, z] in self.data:
+            if str(self.hand) != str(handLabel):
+                continue
             if str(point) == str(p):
                 trajectory.append([x, y, z])
                 T.append(float(fCount))
@@ -96,6 +107,15 @@ class HandData:
 
     def getMaxAnnotationIndex(self, mode):
         return len(self.labeledData.getMoreDataFrom(mode))-1
+
+    def getMoreDataAt(self, mode, annotationIndex):
+        annotations = self.labeledData.getMoreDataFrom(mode)
+        return annotations[annotationIndex][1]
+
+    def getBeginFrameOf(self, mode, annotationIndex):
+        annotations = self.labeledData.getMoreDataFrom(mode)
+        T1 = float(annotations[annotationIndex][0])
+        return T1
 
     def getTrajectoryAroundAnnotation(self, point, mode, annotationIndex, duration):
 
