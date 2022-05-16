@@ -138,3 +138,24 @@ class HandData:
         trajectory, T = self.getTrajectoryAroundAnnotation(point, mode, annotationIndex, duration)
         Z = trajectory[:, 2].reshape(-1, 1)
         return Z.astype(float)
+
+    def getTrajectory_autoScale_aroundAnnotation(self, point, mode, annotationIndex, maxDuration=100, threshold=1):
+        X = self.getX_aroundAnnotation(point, mode, annotationIndex, maxDuration)
+        Y = self.getY_aroundAnnotation(point, mode, annotationIndex, maxDuration)
+        Z = self.getZ_aroundAnnotation(point, mode, annotationIndex, maxDuration)
+        X_autoScale = []
+        Y_autoScale = []
+        Z_autoScale = []
+        for i in range(0, len(X)-1):
+            x_i = X[i]
+            x_i_plus_1 = X[i+1]
+            y_i = Y[i]
+            y_i_plus_1 = Y[i+1]
+            z_i = Z[i]
+            z_i_plus_1 = Z[i+1]
+            X_autoScale.append(x_i)
+            Y_autoScale.append(y_i)
+            Z_autoScale.append(z_i)
+            if ((x_i_plus_1 - x_i)**2 + (y_i_plus_1 - y_i)**2 + (z_i_plus_1 - z_i)**2)**.5 > threshold:
+                break
+        return np.array(X_autoScale).astype(float),np.array(Y_autoScale).astype(float),np.array(Z_autoScale).astype(float)
