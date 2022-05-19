@@ -95,4 +95,4 @@ def display_video(video_name):
 
 #display_video(video_name)
 #images_from_camera()
-#avi_to_mp4(video_name, True)  # video_name = 0 permet d'accéder à la caméra
+avi_to_mp4("AUBERTIN_Passage1_film_RGB.avi", True)  # video_name = 0 permet d'accéder à la caméra

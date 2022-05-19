@@ -8,6 +8,7 @@ from Rotationnels import *
 import matplotlib as mpl
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
+from PolynomialRegressor import *
 
 
 def chooseFile():
@@ -25,9 +26,22 @@ handData.load()
 # ax = fig.add_subplot(111, projection='3d')
 
 
-colorMaps = [cm.get_cmap("viridis"), cm.get_cmap("plasma"), cm.get_cmap("cool")]
+colorMaps = [cm.get_cmap("viridis"), cm.get_cmap("plasma"), cm.get_cmap("viridis")]
 
-def visualize_annotation(mode, annotationIndex, length=100, handPoints=[0], zEnabled=True, hand="Right", dataType="Revers", autoScale=True, threshHold=1, rotationnelActivated=True, miniRotationnel=True):
+def visualize_annotation(mode,
+                         annotationIndex,
+                         length=100,
+                         handPoints=[0],
+                         zEnabled=True,
+                         hand="Right",
+                         dataType="Revers",
+                         autoScale=True,
+                         threshHold=1,
+                         rotationnelActivated=True,
+                         compareRotationnels=True,
+                         miniRotationnel=True,
+                         miniRotationnelStep=2,
+                         interpolation=True):
     fig = plt.figure()
     if zEnabled:
         ax = fig.gca(projection='3d')
@@ -52,6 +66,7 @@ def visualize_annotation(mode, annotationIndex, length=100, handPoints=[0], zEna
         y = y.reshape(1, -1)[0]
         if zEnabled:
             z = z.reshape(1, -1)[0]
+            x_interpolated, y_interpolated, z_interpolated = polynomial_regressor(x, y, z)
 
         colorMapType = type == dataType
         for i in range(0, len(x)):
@@ -69,42 +84,70 @@ def visualize_annotation(mode, annotationIndex, length=100, handPoints=[0], zEna
         if zEnabled:
             ax.set_zlabel('Z')
         if zEnabled:
+            if interpolation:
+                for i in range(0, len(x_interpolated)):
+                    if i + 1 >= len(x_interpolated):
+                        break
+                    ax.plot([x_interpolated[i], x_interpolated[i + 1]], [y_interpolated[i], y_interpolated[i + 1]], [z_interpolated[i], z_interpolated[i + 1]],
+                            color=colorMaps[colorMapType](1 - (i + 1) / len(x_interpolated)),
+                            linewidth=3)
+                if rotationnelActivated:
+                    rot_global = rotationnel_global([x_interpolated, y_interpolated, z_interpolated])
+                    if rot_global is not None:
+                        rot_color = 0.2
+                        rot_vect = np.array([[0, rot_global[0]],
+                                            [0, rot_global[1]],
+                                            [0, rot_global[2]]])
+                        rot_vect = rot_vect/norm(rot_global) * 0.01
+                        rot_vect = rot_vect + np.array([[np.mean(x_interpolated)],
+                                                        [np.mean(y_interpolated)],
+                                                        [np.mean(z_interpolated)]])
+                        ax.plot(rot_vect[0],
+                                rot_vect[1],
+                                rot_vect[2], color=colorMaps[2](rot_color), label="Rotationnel (interpolé)")
+                        ax.plot([rot_vect[0][1]],
+                                [rot_vect[1][1]],
+                                [rot_vect[2][1]], color=colorMaps[2](rot_color), marker="o")
             ax.plot([], [], [], label=str(type) + " " + str(k))
-            if rotationnelActivated:
+            if compareRotationnels:
                 rot_global = rotationnel_global([x, y, z])
-                rot_color = 0.2
-                rot_vect = np.array([[0, rot_global[0]],
-                                    [0, rot_global[1]],
-                                    [0, rot_global[2]]])
-                rot_vect = rot_vect/norm(rot_global) * 0.01
-                rot_vect = rot_vect + np.array([[np.mean(x)],
-                                                [np.mean(y)],
-                                                [np.mean(z)]])
-                ax.plot(rot_vect[0],
-                        rot_vect[1],
-                        rot_vect[2], color=colorMaps[2](rot_color), label="Rotationnel")
-                ax.plot([rot_vect[0][1]],
-                        [rot_vect[1][1]],
-                        [rot_vect[2][1]], color=colorMaps[2](rot_color), marker="o")
-            if miniRotationnel:
-                list_rot_i = rotationels_discret([x, y, z])
-
-                j = 0
-                for rot_i in list_rot_i:
-                    rot_vect = np.array([[0, rot_i[0]],
-                                         [0, rot_i[1]],
-                                         [0, rot_i[2]]])
-                    rot_vect = rot_vect / norm(rot_i) * 0.01
-                    rot_vect = rot_vect + np.array([[x[j]+x[j+1]],
-                                                    [y[j]+y[j+1]],
-                                                    [z[j]+z[j+1]]])/2
+                rot_color = 0.9
+                if rot_global is not None:
+                    rot_vect = np.array([[0, rot_global[0]],
+                                        [0, rot_global[1]],
+                                        [0, rot_global[2]]])
+                    rot_vect = rot_vect/norm(rot_global) * 0.01
+                    rot_vect = rot_vect + np.array([[np.mean(x)],
+                                                    [np.mean(y)],
+                                                    [np.mean(z)]])
                     ax.plot(rot_vect[0],
                             rot_vect[1],
-                            rot_vect[2], color=colorMaps[2](1 - (j + 1) / len(x)), marker="_")
+                            rot_vect[2], color=colorMaps[2](rot_color), label="Rotationnel (brut)")
                     ax.plot([rot_vect[0][1]],
                             [rot_vect[1][1]],
-                            [rot_vect[2][1]], color=colorMaps[2](1 - (j + 1) / len(x)), marker="o")
-                    j += 1
+                            [rot_vect[2][1]], color=colorMaps[2](rot_color), marker="o")
+            if miniRotationnel:
+                list_rot_i, listNorm = rotationels_discret([x_interpolated, y_interpolated, z_interpolated])
+                j = 0
+                if list_rot_i is not None:
+                    for rot_i in list_rot_i:
+                        if j % miniRotationnelStep != 0:
+                            j+=1
+                            continue
+                        rot_vect = np.array([[0, rot_i[0]],
+                                             [0, rot_i[1]],
+                                             [0, rot_i[2]]])
+                        rot_vect = (rot_vect)*0.1
+                        rot_vect = rot_vect + np.array([[x_interpolated[j]+x_interpolated[j+1]],
+                                                        [y_interpolated[j]+y_interpolated[j+1]],
+                                                        [z_interpolated[j]+z_interpolated[j+1]]])/2
+                        ax.plot(rot_vect[0],
+                                rot_vect[1],
+                                rot_vect[2], color=colorMaps[colorMapType](1 - (j + 1) / len(x_interpolated)), marker="_")
+                        ax.plot([rot_vect[0][1]],
+                                [rot_vect[1][1]],
+                                [rot_vect[2][1]], color=colorMaps[colorMapType](1 - (j + 1) / len(x_interpolated)), marker="o")
+                        j += 1
 
         else:
             ax.plot([], [], label=str(type) + " " + str(k))
@@ -133,6 +176,9 @@ for i in range(0, handData.getMaxAnnotationIndex(annotation)):
                          autoScale=True,
                          threshHold=0.15,
                          rotationnelActivated=True,
-                         miniRotationnel=True)
+                         compareRotationnels=True,
+                         miniRotationnel=True,
+                         miniRotationnelStep=5,
+                         interpolation=True)
 
 plt.show()

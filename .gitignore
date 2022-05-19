@@ -1,1 +1,4 @@
 /Logiciels/HandExtractor/Samples/*.avi
+/Logiciels/HandExtractor/Samples/Bonnin/*.avi
+/Logiciels/HandExtractor/Samples/aubertin/*.avi
+*.avi

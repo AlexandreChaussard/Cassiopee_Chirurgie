@@ -14,7 +14,7 @@ mpPose = mp.solutions.pose
 pose = mpPose.Pose(model_complexity=1, min_detection_confidence=0.7, min_tracking_confidence=0.6)
 
 name = 'LEJAY/LEJAY_p2_short.mp4'
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture('LEJAY/LEJAY_p2_short.mp4')
 
 # ----- Modifier la taille de l'affichage vidéo : ------
 

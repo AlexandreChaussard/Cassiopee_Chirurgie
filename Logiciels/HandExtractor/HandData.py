@@ -158,4 +158,4 @@ class HandData:
             Z_autoScale.append(z_i)
             if ((x_i_plus_1 - x_i)**2 + (y_i_plus_1 - y_i)**2 + (z_i_plus_1 - z_i)**2)**.5 > threshold:
                 break
-        return np.array(X_autoScale).astype(float),np.array(Y_autoScale).astype(float),np.array(Z_autoScale).astype(float)
+        return np.array(X_autoScale).astype(float), np.array(Y_autoScale).astype(float), np.array(Z_autoScale).astype(float)
