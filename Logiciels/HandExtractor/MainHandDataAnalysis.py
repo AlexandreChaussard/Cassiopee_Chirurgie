@@ -41,7 +41,9 @@ def visualize_annotation(mode,
                          compareRotationnels=True,
                          miniRotationnel=True,
                          miniRotationnelStep=2,
-                         interpolation=True):
+                         interpolation=True,
+                         box_vitesse=True,
+                         nbre_coupe=100):
     fig = plt.figure()
     if zEnabled:
         ax = fig.gca(projection='3d')
@@ -137,7 +139,7 @@ def visualize_annotation(mode,
                         rot_vect = np.array([[0, rot_i[0]],
                                              [0, rot_i[1]],
                                              [0, rot_i[2]]])
-                        rot_vect = (rot_vect)*0.1
+                        rot_vect = (rot_vect)*100
                         rot_vect = rot_vect + np.array([[x_interpolated[j]+x_interpolated[j+1]],
                                                         [y_interpolated[j]+y_interpolated[j+1]],
                                                         [z_interpolated[j]+z_interpolated[j+1]]])/2
@@ -148,6 +150,28 @@ def visualize_annotation(mode,
                                 [rot_vect[1][1]],
                                 [rot_vect[2][1]], color=colorMaps[colorMapType](1 - (j + 1) / len(x_interpolated)), marker="o")
                         j += 1
+
+            if box_vitesse:
+                box, point_min, point_max, pas, champ_vitesse = cube_vitesse_projected([x_interpolated,
+                                                                              y_interpolated,
+                                                                              z_interpolated], nbre_coupe=nbre_coupe)
+                if box is None:
+                    continue
+                for i in range(len(box[0])):
+                    for j in range(len(box[1])):
+                        for k in range(len(box[2])):
+                            p_bot = point_min + np.array([i * pas[0],
+                                                          j * pas[1],
+                                                          k * pas[2]])
+                            p_top = point_min + np.array([i * pas[0],
+                                                          j * pas[1],
+                                                          k * pas[2]]) + box[i][j][k]
+                            ax.plot([p_bot[0], p_top[0]],
+                                    [p_bot[1], p_top[1]],
+                                    [p_bot[2], p_top[2]], marker="_", color="b")
+                            ax.plot([p_top[0]],
+                                    [p_top[1]],
+                                    [p_top[2]], marker="o", color="b")
 
         else:
             ax.plot([], [], label=str(type) + " " + str(k))
@@ -162,7 +186,6 @@ def visualize_annotation(mode,
                   + "\nBetween frame " + str(frame) + " - " + str(frame+length)
                   + "\nBetween time " + timeStr + " - " + timeStrPushed)
         plt.pause(1)
-
 
 annotation = "Aiguille"
 for i in range(0, handData.getMaxAnnotationIndex(annotation)):
@@ -179,6 +202,8 @@ for i in range(0, handData.getMaxAnnotationIndex(annotation)):
                          compareRotationnels=True,
                          miniRotationnel=True,
                          miniRotationnelStep=5,
-                         interpolation=True)
+                         interpolation=True,
+                         box_vitesse=True,
+                         nbre_coupe=3)
 
 plt.show()
