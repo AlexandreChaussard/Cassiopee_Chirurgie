@@ -1,11 +1,14 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import sklearn.linear_model
+from PolynomialRegressor import *
 
 from mpl_toolkits.mplot3d import Axes3D
 
-X_train = np.random.rand(2000).reshape(1000,2)*60
-y_train = (X_train[:, 0]**2)+(X_train[:, 1]**2)
+x,y,z = polynome(coefs=[0, -1, -1, -1, -1, 1, 1, 1, 1, -1], length=5, count=300)
+
+X_train = np.array([x, z]).transpose() #np.random.rand(2000).reshape(1000,2)*60
+y_train = np.array(y)
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')

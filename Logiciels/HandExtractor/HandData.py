@@ -1,11 +1,13 @@
 import numpy as np
 from AnnotationDataManager import AnnotationData
+import os
 
 
 class HandData:
 
     def __init__(self, path):
         self.path = path
+        self.name = None
         self.hand = "Right"
         self.data = []
         self.points = []
@@ -15,7 +17,7 @@ class HandData:
     def load(self):
 
         file = open(self.path, "r")
-
+        self.name = os.path.basename(file.name)
         line = file.readline()
         while line:
             try:

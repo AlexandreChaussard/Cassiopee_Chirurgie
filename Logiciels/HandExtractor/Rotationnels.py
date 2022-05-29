@@ -3,7 +3,7 @@ from sklearn.mixture import GaussianMixture
 from numpy import quantile, where, random
 
 
-def rotationels_discret(trajectory):
+def vitesse_discret(trajectory):
     X = trajectory[0]
     Y = trajectory[1]
     Z = trajectory[2]
@@ -14,27 +14,12 @@ def rotationels_discret(trajectory):
         rot_i_x = X[i + 1] - X[i]
         rot_i_y = Y[i + 1] - Y[i]
         rot_i_z = Z[i + 1] - Z[i]
-        #rot_i_x = ((Z[i + 2] - 2 * Z[i + 1] + Z[i]) / (Y[i + 1] - Y[i]) - (Y[i + 2] - 2 * Y[i + 1] + Y[i]) / (
-        #        Z[i + 1] - Z[i]))
-        #rot_i_y = ((X[i + 2] - 2 * X[i + 1] + X[i]) / (Z[i + 1] - Z[i]) - (Z[i + 2] - 2 * Z[i + 1] + Z[i]) / (
-        #        X[i + 1] - X[i]))
-        #rot_i_z = ((Y[i + 2] - 2 * Y[i + 1] + Y[i]) / (X[i + 1] - X[i]) - (X[i + 2] - 2 * X[i + 1] + X[i]) / (
-        #        Y[i + 1] - Y[i]))
         rot_i = [rot_i_x, rot_i_y, rot_i_z]
         listNorm.append(norm(rot_i))
         list.append(np.array(rot_i))
 
     if list is None or listNorm is None or len(list) < 2 or len(listNorm) < 2:
         return None, None
-
-    #listNorm = np.array(listNorm).reshape(-1, 1)
-    #gmm = GaussianMixture().fit(listNorm)
-    #scores = gmm.score_samples(listNorm)
-    #thresh = quantile(scores, .1)
-    #index = where(scores > thresh)[0]
-
-    #list = np.array(list)[index]
-    #listNorm = np.array(listNorm)[index]
 
     return list, listNorm
 
@@ -43,30 +28,61 @@ def norm(vect):
     return (vect[0] ** 2 + vect[1] ** 2 + vect[2] ** 2) ** .5
 
 
-def rotationnel_global(trajectory):
-    X = trajectory[0]
-    Y = trajectory[1]
-    Z = trajectory[2]
-    list_rot_discret, listNorm = rotationels_discret(trajectory)
-    if list_rot_discret is None or len(list_rot_discret) == 0:
-        return
+def rotationnel_global(box, pas, ax=None, point_min=None, point_max=None, colorMap=None, enablePlot=None):
 
-    rot_global = None
-    for i in range(0, len(list_rot_discret)):
-        rot_i = list_rot_discret[i]
-        vector_i = np.array([[X[i]],
-                             [Y[i]],
-                             [Z[i]]])
-        vector_i_plus_1 = np.array([[X[i + 1]],
-                                    [Y[i + 1]],
-                                    [Z[i + 1]]])
-        if rot_global is None:
-            rot_global = rot_i * norm(vector_i_plus_1 - vector_i)
-        else:
-            rot_global += rot_i * norm(vector_i_plus_1 - vector_i)
+    rot_vectors = []
+
+    (x_size, y_size, z_size) = box.shape
+    for i in range(0, x_size-1):
+        for j in range(0, y_size-1):
+            for k in range(0, z_size-1):
+                rot_x = (box[i+1][j+1][k+1][2] - box[i][j][k][2])/pas[1] \
+                        + (box[i+1][j+1][k+1][1] - box[i][j][k][1])/pas[2]
+                rot_y = (box[i+1][j+1][k+1][0] - box[i][j][k][0])/pas[2] \
+                        + (box[i+1][j+1][k+1][2] - box[i][j][k][2])/pas[0]
+                rot_z = (box[i+1][j+1][k+1][1] - box[i][j][k][1])/pas[0] \
+                        + (box[i+1][j+1][k+1][0] - box[i][j][k][0])/pas[1]
+                rot_vector = np.array([rot_x, rot_y, rot_z]) * norm(np.array([pas[0],
+                                                                              pas[1],
+                                                                              pas[2]]))
+                rot_vectors.append(rot_vector)
+
+    rot_vectors = np.array(rot_vectors)
+    rot_global = np.sum(rot_vectors, axis=0)
+
+    if enablePlot:
+
+        def findMax(matrix):
+            maxVector = None
+            for i in range(0, len(matrix)):
+                vector = matrix[i]
+                if maxVector is None:
+                    maxVector = vector
+                if norm(maxVector) < norm(vector):
+                    maxVector = vector
+            return maxVector
+
+        divider = norm(findMax(rot_vectors))
+        index = 0
+        for i in range(0, x_size-1):
+            for j in range(0, y_size-1):
+                for k in range(0, z_size-1):
+                    rot_vector = (rot_vectors[index]/divider)
+                    index += 1
+                    if norm(rot_vector) < 0.1:
+                        continue
+                    rot_vector = rot_vector*0.05
+                    rot_x, rot_y, rot_z = rot_vector[0], rot_vector[1], rot_vector[2]
+                    point_quadrillage = point_min + np.array([i * pas[0],
+                                                              j * pas[1],
+                                                              k * pas[2]])
+                    x = np.array([point_quadrillage[0], point_quadrillage[0] + rot_x])
+                    y = np.array([point_quadrillage[1], point_quadrillage[1] + rot_y])
+                    z = np.array([point_quadrillage[2], point_quadrillage[2] + rot_z])
+                    ax.plot(x, y, z, color=colorMap(1 - (i + 1) / x_size))
+                    ax.plot([x[1]], [y[1]], [z[1]], color=colorMap(1 - (i + 1) / x_size), marker="o")
 
     return rot_global
-
 
 def cube_vitesse(trajectory, nbre_coupe):
     def ponderator(x):
@@ -155,7 +171,7 @@ def cube_vitesse_projected(trajectory, nbre_coupe):
         index = np.argmin(normes)
         v_opt = champ_vitesse[index]
 
-        return v_opt * ponderator(normes[index]) * 100
+        return v_opt * ponderator(normes[index])
 
     champ_vitesse = []
     X = trajectory[0]
