@@ -3,44 +3,53 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from PolynomialRegressor import *
 
+
 def find_plan(x, y, z):
     pca = PCA(n_components=2)
-    pca.fit(np.array([x, y, z]))
+    pca.fit(np.array([x, y, z]).T)
 
     acp = pca.components_
-    print("Variances expliquées\n", pca.explained_variance_ratio_)
-    print("Composantes principales :\n", pca.components_)
-    u = acp[1]
-    v = acp[2]
-    print("U\n", u)
-    print("V\n",v)
-    return u,v
+    u = acp[0] / np.linalg.norm(acp[0])
+    v = acp[1] / np.linalg.norm(acp[1])
+    return u, v
 
 
-x = [0, 10, 4, 1]
-y = [1, 1, 3, 50]
-z = [0, 0, 0, 0]
+def find_normal(u, v):
+    w = np.array(np.cross(u/np.linalg.norm(u), v/np.linalg.norm(v)))
+    if np.dot(w, np.array([0,0,1])) < 0:
+        w = -w
+    return w
 
-x,y,z = polynome(length=2, count=100)
+def find_base(trajectory):
+    x, y, z = trajectory[0], trajectory[1], trajectory[2]
 
-fig = plt.figure()
-ax = fig.gca(projection='3d')
-ax.set_xlabel('X')
-ax.set_ylabel('Y')
-ax.set_zlabel('Z')
-ax.plot(x,y,z, label="brute")
+    u, v = find_plan(x, y, z)
+    w = find_normal(u, v)
+    return np.array([u, v, w])
 
-u,v = find_plan(x,y,z)
-u = u*10
-v = v*10
+def plot_referentiel(trajectory, axis=None, multiplier=10):
+    x, y, z = trajectory[0], trajectory[1], trajectory[2]
+    if axis is None:
+        fig = plt.figure()
+        axis = fig.gca(projection='3d')
+        axis.set_xlabel('X')
+        axis.set_ylabel('Y')
+        axis.set_zlabel('Z')
+        axis.plot(x, y, z, label="brute")
 
+    [u, v, w] = find_base(trajectory)*multiplier
 
-mean_point = [np.mean(x), np.mean(y), np.mean(z)]
-ax.plot([mean_point[0] - u[0][0], mean_point[0] + u[0][0]],
-        [mean_point[1] - u[1][0], mean_point[1] + u[1][0]],
-        [mean_point[2] - u[2][0], mean_point[2] + u[2]], label="u")
-ax.plot([mean_point[0] - v[0][0], mean_point[0] + v[0][0]],
-        [mean_point[1] - v[1][0], mean_point[1] + v[1][0]],
-        [mean_point[2] - v[2][0], mean_point[2] + v[2][0]], label="v")
-plt.legend()
-plt.show()
+    mean_point = [np.mean(x), np.mean(y), np.mean(z)]
+    axis.plot([mean_point[0] - u[0], mean_point[0] + u[0]],
+            [mean_point[1] - u[1], mean_point[1] + u[1]],
+            [mean_point[2] - u[2], mean_point[2] + u[2]], label="u", color='b')
+    axis.plot([mean_point[0] - v[0], mean_point[0] + v[0]],
+            [mean_point[1] - v[1], mean_point[1] + v[1]],
+            [mean_point[2] - v[2], mean_point[2] + v[2]], label="v", color='g')
+    axis.plot([mean_point[0], mean_point[0] + w[0]],
+            [mean_point[1], mean_point[1] + w[1]],
+            [mean_point[2], mean_point[2] + w[2]], label="w", color='r')
+    plt.legend()
+
+#plot_referentiel(polynome(length=10, count=300))
+#plt.show()
