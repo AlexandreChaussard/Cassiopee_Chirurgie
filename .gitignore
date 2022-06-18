@@ -2,3 +2,8 @@
 /Logiciels/HandExtractor/Samples/Bonnin/*.avi
 /Logiciels/HandExtractor/Samples/aubertin/*.avi
 *.avi
+/Logiciels/Annotations/__pycache__/*.pyc
+/Documentations/Hand_Tracking_And_Detection/__pycache__/*.pyc
+/Documentations/Hand_Tracking_And_Detection/NewOrlPrograms/__pycache__/*.pyc
+/.idea
+/Logiciels/HandExtractor/__pycache__/*.pyc

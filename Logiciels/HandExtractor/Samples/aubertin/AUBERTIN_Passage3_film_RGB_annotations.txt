@@ -1,0 +1,124 @@
+Porte-aiguille;16.0;In
+Porte-aiguille;78.0;In
+Préférence manuelle;128.0;Droitier
+Aiguille;28.0;Coup droit
+Aiguille;164.0;Coup droit
+Aiguille;299.0;Coup droit
+Aiguille;418.0;Coup droit
+Aiguille;520.0;Coup droit
+Aiguille;666.0;Coup droit
+Aiguille;791.0;Coup droit
+Aiguille;929.0;Coup droit
+Aiguille;1122.0;Revers
+Aiguille;1309.0;Revers
+Aiguille;1407.0;Revers
+Aiguille;1500.0;Coup droit
+Aiguille;1590.0;Coup droit
+Points;10.0;Début
+Points;121.0;Début
+Points;261.0;Début
+Points;400.0;Début
+Points;473.0;Début
+Points;612.0;Début
+Points;761.0;Début
+Points;904.0;Début
+Points;1053.0;Début
+Points;1246.0;Début
+Points;1369.0;Début
+Points;1465.0;Début
+Points;1578.0;Début
+Porte-aiguille;137.0;In
+Porte-aiguille;212.0;In
+Porte-aiguille;269.0;In
+Porte-aiguille;341.0;In
+Porte-aiguille;404.0;In
+Porte-aiguille;453.0;In
+Porte-aiguille;503.0;In
+Porte-aiguille;549.0;In
+Porte-aiguille;614.0;In
+Porte-aiguille;681.0;In
+Porte-aiguille;766.0;In
+Porte-aiguille;859.0;In
+Porte-aiguille;906.0;In
+Porte-aiguille;1017.0;In
+Porte-aiguille;1020.0;In
+Porte-aiguille;1037.0;In
+Porte-aiguille;1105.0;In
+Porte-aiguille;1230.0;In
+Porte-aiguille;1293.0;In
+Porte-aiguille;1336.0;In
+Porte-aiguille;1372.0;In
+Porte-aiguille;1437.0;In
+Porte-aiguille;1483.0;In
+Porte-aiguille;1552.0;In
+Porte-aiguille;1581.0;In
+Porte-aiguille;1660.0;In
+Porte-aiguille;10.0;Avec aiguille (out)
+Porte-aiguille;88.0;Avec aiguille (out)
+Porte-aiguille;244.0;Avec aiguille (out)
+Porte-aiguille;361.0;Avec aiguille (out)
+Porte-aiguille;459.0;Avec aiguille (out)
+Porte-aiguille;553.0;Avec aiguille (out)
+Porte-aiguille;711.0;Avec aiguille (out)
+Porte-aiguille;898.0;Avec aiguille (out)
+Porte-aiguille;1022.0;Sans aiguille (out)
+Porte-aiguille;1044.0;Avec aiguille (out)
+Porte-aiguille;1244.0;Avec aiguille (out)
+Porte-aiguille;1358.0;Avec aiguille (out)
+Porte-aiguille;1481.0;Sans aiguille (out)
+Porte-aiguille;1578.0;Avec aiguille (out)
+Porte-aiguille;1665.0;Sans aiguille (out)
+Pince;1.0;Out
+Pince;16.0;Out
+Pince;78.0;Out
+Pince;134.0;Out
+Pince;213.0;Out
+Pince;267.0;Out
+Pince;343.0;Out
+Pince;404.0;Out
+Pince;452.0;Out
+Pince;503.0;Out
+Pince;549.0;Out
+Pince;614.0;Out
+Pince;682.0;Out
+Pince;766.0;Out
+Pince;872.0;Out
+Pince;905.0;Out
+Pince;1041.0;Out
+Pince;1107.0;Out
+Pince;1224.0;Out
+Pince;1293.0;Out
+Pince;1337.0;Out
+Pince;1371.0;Out
+Pince;1444.0;Out
+Pince;1483.0;Out
+Pince;1557.0;Out
+Pince;1582.0;Out
+Pince;1660.0;Out
+Pince;1677.0;Out
+Fil;98.0;Main du porte-aiguille
+Fil;119.0;Main du porte-aiguille
+Fil;243.0;Main du porte-aiguille
+Fil;261.0;Main du porte-aiguille
+Fil;382.0;Main du porte-aiguille
+Fil;399.0;Main du porte-aiguille
+Fil;456.0;Main du porte-aiguille
+Fil;470.0;Main du porte-aiguille
+Fil;593.0;Main du porte-aiguille
+Fil;611.0;Main du porte-aiguille
+Fil;745.0;Main du porte-aiguille
+Fil;760.0;Main du porte-aiguille
+Fil;891.0;Main du porte-aiguille
+Fil;903.0;Main du porte-aiguille
+Fil;1037.0;Main du porte-aiguille
+Fil;1053.0;Main du porte-aiguille
+Fil;1231.0;Main du porte-aiguille
+Fil;1244.0;Main du porte-aiguille
+Fil;1357.0;Main du porte-aiguille
+Fil;1368.0;Main du porte-aiguille
+Fil;1446.0;Les deux mains
+Fil;1463.0;Les deux mains
+Fil;1574.0;Main du porte-aiguille
+Fil;1579.0;Main du porte-aiguille
+Fil;1659.0;Main de la pince
+Fil;1663.0;Main de la pince

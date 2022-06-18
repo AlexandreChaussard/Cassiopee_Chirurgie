@@ -9,6 +9,9 @@ import matplotlib as mpl
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 from ACP import *
+from RotateurKleinChaussard import *
+import sklearn.metrics as metrics
+
 
 def chooseFile():
     tk.Tk().withdraw()
@@ -179,25 +182,32 @@ def visualize_annotation(mode,
             ax.plot([], [], label=str(type) + " " + str(k))
         if referentiel:
             plot_referentiel([x_interpolated, y_interpolated, z_interpolated], axis=ax, multiplier=0.01)
+        if rotationnelActivated:
+            plot_rot_global([x_interpolated, y_interpolated, z_interpolated],
+                            axis=ax,
+                            plotVitesse=False,
+                            plotAcceleration=False,
+                            plotMiniRot=True,
+                            multiplier=0.05)
         ax.legend()
 
         frame = int(handData.getBeginFrameOf(mode, annotationIndex))
         fps = 25
         timeStr = time.strftime('%M:%S', time.gmtime(frame / fps))
-        timeStrPushed = time.strftime('%M:%S', time.gmtime((frame + 100) / fps))
+        timeStrPushed = time.strftime('%M:%S', time.gmtime((frame + length) / fps))
 
-        #plt.title("Visualisation trajectoire : " + str(mode) + " | Main : " + hand
-        #          + "\nBetween frame " + str(frame) + " - " + str(frame + length)
-        #          + "\nBetween time " + timeStr + " - " + timeStrPushed)
+        plt.title("Visualisation trajectoire : " + str(mode) + " | Main : " + hand
+                  + "\nBetween frame " + str(frame) + " - " + str(frame + length)
+                  + "\nBetween time " + timeStr + " - " + timeStrPushed)
         plt.pause(1)
 
 
 annotation = "Aiguille"
-if True:
+if False:
     for i in range(0, handData.getMaxAnnotationIndex(annotation)):
         visualize_annotation(annotation,
                              annotationIndex=i,
-                             length=50,
+                             length=80,
                              handPoints=[17],
                              zEnabled=True,
                              hand="Right",
@@ -205,8 +215,8 @@ if True:
                              autoScale=True,
                              threshHold=0.15,
                              rotationnelActivated=True,
-                             plotVitesse=True,
-                             miniRotationnel=True,
+                             plotVitesse=False,
+                             miniRotationnel=False,
                              miniRotationnelStep=5,
                              interpolation=True,
                              box_vitesse=False,
@@ -240,11 +250,12 @@ def compute_rotationel_global(annotationIndex,
                                                                            nbre_coupe=nbre_coupe)
     return rotationnel_global(box, pas)
 
+
 def compute_normal_vector(annotationIndex,
-                              hand="Right",
-                              handPoint=17,
-                              length=100,
-                              threshHold=1):
+                          hand="Right",
+                          handPoint=17,
+                          length=100,
+                          threshHold=1):
     point = annotationIndex
     handData.setHand(hand)
     x, y, z = handData.getTrajectory_autoScale_aroundAnnotation(handPoint,
@@ -259,6 +270,27 @@ def compute_normal_vector(annotationIndex,
     x_interpolated, y_interpolated, z_interpolated = polynomial_regressor(x, y, z)
     [u, v, w] = find_base([x_interpolated, y_interpolated, z_interpolated])
     return w
+
+
+def compute_rotateur(annotationIndex,
+                     hand="Right",
+                     handPoint=17,
+                     length=100,
+                     threshHold=1):
+    point = annotationIndex
+    handData.setHand(hand)
+    x, y, z = handData.getTrajectory_autoScale_aroundAnnotation(handPoint,
+                                                                annotation,
+                                                                point,
+                                                                maxDuration=length,
+                                                                threshold=threshHold)
+
+    x = x.reshape(1, -1)[0]
+    y = y.reshape(1, -1)[0]
+    z = z.reshape(1, -1)[0]
+    x_interpolated, y_interpolated, z_interpolated = polynomial_regressor(x, y, z)
+    return rotateur_global([x_interpolated, y_interpolated, z_interpolated])
+
 
 def plot_all_rotationnels(mode="Aiguille",
                           hand="Right",
@@ -278,19 +310,23 @@ def plot_all_rotationnels(mode="Aiguille",
     for annotationIndex in range(0, handData.getMaxAnnotationIndex(mode)):
         type = handData.getMoreDataAt(mode, annotationIndex)
         rot_global = compute_rotationel_global(annotationIndex, hand, handPoint, nbre_coupe, length, threshHold)
+        rotateur_interpol = compute_rotateur(annotationIndex, hand, handPoint, length, threshHold)
         w = compute_normal_vector(annotationIndex, hand, handPoint, length, threshHold)
         colorMapType = type == "Revers"
         colorMap = colorMaps[colorMapType]
         rot_color = 0.6
 
         if saveFile:
-            line = type + ";rot=[" + str(rot_global[0]) + ":" + str(rot_global[1]) + ":" + str(rot_global[2]) + "];"\
-                   + "w=[" + str(w[0]) + ":" + str(w[1]) + ":" + str(w[2]) + "];"\
+            line = type + ";rotationnel=[" + str(rot_global[0]) + ":" + str(rot_global[1]) + ":" + str(
+                rot_global[2]) + "];" \
+                   + "w=[" + str(w[0]) + ":" + str(w[1]) + ":" + str(w[2]) + "];" \
+                   + "rotateur=[" + str(rotateur_interpol[0]) + ":" + str(rotateur_interpol[1]) + ":" + str(
+                rotateur_interpol[2]) + "];" \
                    + handData.name + ";\n"
             if line not in open(file.name, 'r').read():
                 file.write(line)
 
-        rot_global = rot_global/norm(rot_global)
+        rot_global = rotateur_interpol / norm(rotateur_interpol)
         rot_vect = np.array([[0, rot_global[0]],
                              [0, rot_global[1]],
                              [0, rot_global[2]]])
@@ -306,72 +342,86 @@ def plot_all_rotationnels(mode="Aiguille",
         print("rotationnels.txt saved.")
     plt.show()
 
+
 #plot_all_rotationnels(mode="Aiguille", saveFile=True)
 
 def unwrap_rotationels():
     file = open("rotationnels.txt", 'r')
+    inviduals = []
     types = []
     rotationnels = []
     w = []
+    rotateurs = []
     for line in file.readlines():
         seria = line.split(";")
         type = seria[0]
-        rotSeria = seria[1].replace("rot=[", "").replace("]", "").split(":")
+        rotSeria = seria[1].replace("rotationnel=[", "").replace("]", "").split(":")
         rot_x, rot_y, rot_z = float(rotSeria[0]), float(rotSeria[1]), float(rotSeria[2])
         wSeria = seria[2].replace("w=[", "").replace("]", "").split(":")
         w_x, w_y, w_z = float(wSeria[0]), float(wSeria[1]), float(wSeria[2])
+        rotateurSeria = seria[3].replace("rotateur=[", "").replace("]", "").split(":")
+        rotateur_x, rotateur_y, rotateur_z = float(rotateurSeria[0]), float(rotateurSeria[1]), float(rotateurSeria[2])
         types.append(type)
+        inviduals.append(seria[len(seria)-2])
         rotationnels.append(np.array([rot_x, rot_y, rot_z]))
+        rotateurs.append(np.array([rotateur_x, rotateur_y, rotateur_z]))
         w.append(np.array([w_x, w_y, w_z]))
 
     file.close()
-    return types, rotationnels, w
+    return types, inviduals, rotationnels, w, rotateurs
 
-def plot_all_inviduals():
 
-    types, rotationnels, w = unwrap_rotationels()
+def plot_all_inviduals(selectedIndividuals=None):
+    types, individus, rotationnels, w, rotateurs = unwrap_rotationels()
 
-    produits_scalaire = []
+    plot_legend = []
+    data = []
     for i in range(0, len(types)):
+        individu = individus[i]
+        if selectedIndividuals:
+            skip = True
+            for ind in selectedIndividuals:
+                if ind in individu:
+                    skip = False
+                    break
+            if skip:
+                continue
         type = types[i]
+        rotateur_global = rotateurs[i]
         rot_global = rotationnels[i]
         w_vector = w[i]
         colorMapType = type == "Revers"
         colorMap = colorMaps[colorMapType]
 
-        prod_scal = np.dot(w_vector, rot_global)
-        produits_scalaire.append(prod_scal)
+        prod_scal_rot = np.dot(w_vector, rot_global)
+        prod_scal_rotateur = np.dot(w_vector, rotateur_global)
 
-        plt.plot([prod_scal], [colorMapType], marker="o", color=colorMap(0.6))
+        data.append([prod_scal_rotateur < 0, colorMapType])
+        # plt.plot([prod_scal_rot], [colorMapType], marker="o", color=colorMap(0.6))
+        plt.plot([prod_scal_rotateur], [colorMapType + 0.5], marker="o", color=colorMap(0.6))
 
+        if colorMapType not in plot_legend:
+            plt.plot([], [], marker="o", color=colorMap(0.6), label=type)
+            plot_legend.append(colorMapType)
+
+    data = np.array(data)
+    data = data.T
+    y_true = data[1:2][0]
+    y_pred = data[0:1][0]
+    confusion = metrics.confusion_matrix(y_true, y_pred)
+    print(str(selectedIndividuals))
+    print(confusion)
+
+    if selectedIndividuals:
+        plt.title(str(selectedIndividuals))
+
+    plt.legend()
     plt.show()
 
-def NOT_TO_USE_plot_all_inviduals_old():
-
-    types, rotationnels, w = unwrap_rotationels()
-
-    fig = plt.figure()
-    ax = fig.gca(projection='3d')
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.set_zlabel('Z')
-    for i in range(0, len(types)):
-        type = types[i]
-        rot_global = rotationnels[i]
-        colorMapType = type == "Revers"
-        colorMap = colorMaps[colorMapType]
-        rot_color = 0.6
-        rot_global = rot_global / norm(rot_global)
-        rot_vect = np.array([[0, rot_global[0]],
-                             [0, rot_global[1]],
-                             [0, rot_global[2]]])
-        ax.plot(rot_vect[0],
-                rot_vect[1],
-                rot_vect[2], color=colorMap(rot_color))
-        ax.plot([rot_vect[0][1]],
-                [rot_vect[1][1]],
-                [rot_vect[2][1]], color=colorMap(rot_color), marker="o")
-
-    plt.show()
 
 plot_all_inviduals()
+plot_all_inviduals(selectedIndividuals=["CHAKFE", "AUBERTIN", "BONNIN", "BRATU"])
+plot_all_inviduals(selectedIndividuals=["BRATU"])
+plot_all_inviduals(selectedIndividuals=["BONNIN"])
+plot_all_inviduals(selectedIndividuals=["CHAKFE"])
+plot_all_inviduals(selectedIndividuals=["AUBERTIN"])
